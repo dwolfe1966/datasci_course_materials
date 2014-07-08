@@ -15,13 +15,23 @@ def main():
       term, score  = line.split("\t")  # The file is tab-delimited. "\t" means "tab character"
       scores[term] = int(score)  # Convert the score to an integer.
 
-    print scores.items() # Print every (term, score) pair in the dictionary
+    # print scores.items() # Print every (term, score) pair in the dictionary
     tweet_file = open(sys.argv[2])
     tweets = {} # dictionary for all tweets
     for line in tweet_file:
         tweet = {} # dictionairy for individual tweet
         tweet = json.loads(line)    
-        print tweet.items()
+        if tweet.get('text','NO') != 'NO': 
+            try:
+                print tweet['text']
+                print tweet['id_str']
+                print tweet['user']['id']
+                print tweet['user']['name']
+                print '--------------------------'
+            except UnicodeEncodeError:
+                print "Unicode error"
+        else:
+            print tweet.items()
         
     hw()
     lines(sent_file)

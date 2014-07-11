@@ -51,7 +51,7 @@ def main():
         tweetStates[tweetindex] = tweetState
 
     # print winner
-    print tweetStates[bigindex] + ' '+str(bigscore)
+    print tweetStates[bigindex]# + ' '+str(bigscore)
 
     # print maps
     #print str(bigindex) + str(bigscore)

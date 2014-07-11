@@ -1,11 +1,6 @@
 import sys
 import json
 
-def hw():
-    print 'Hello, world!'
-
-def lines(fp):
-    print str(len(fp.readlines()))
 
 def main():
     # create data dictionairy
@@ -19,6 +14,7 @@ def main():
     tweet_file = open(sys.argv[2])
     tweets = {} # dictionary for all tweets
     tweetindex = 0
+    e = 0
     for line in tweet_file:
         tweetindex = tweetindex +1
         tweetscore = 0
@@ -26,25 +22,23 @@ def main():
         tweet = json.loads(line)    
         if tweet.get('text','NO') != 'NO': 
             try:
-                tweetTerm = tweet['text']
-                tweetscore = getTweetScore(tweetTerm, scores)
+                tweetText = tweet['text']
+                tweetscore = getTweetScore(tweetText, scores)
                 # unneeded
-                print tweetTerm
-                print 'score='+str(tweetscore)
-                print tweet['id_str']
-                print tweet['user']['id']
-                print tweet['user']['name']
-                print '--------------------------'
+                #print tweetText
+                #print 'score='+str(tweetscore)
+                #print tweet['id_str']
+                #print tweet['user']['id']
+                #print tweet['user']['name']
+                #print '--------------------------'
             except UnicodeEncodeError:
-                print "Unicode error" +str(tweetscore)
-        else:
-            print tweet.items()
+                e = e+1
+                #print "Unicode error" +str(tweetscore)
+        #else:
+            #print tweet.items()
         tweets[tweetindex] = tweetscore
-
-    print tweets    
-    #hw()
-    # lines(sent_file)
-    # lines(tweet_file)
+        print tweetscore
+        
 
 def getTweetScore(twText , scores):
     score = 0;

@@ -6,43 +6,58 @@ def main():
 
     # compute # of occurences of each term
     tweet_file = open(sys.argv[1])
-    e = 0
     hashtagMap = {}
-    termcount = 0
     for line in tweet_file:
         tweet = {} # dictionairy for individual tweet
-        tweet = json.loads(line)    
-        if tweet.get('entities','N') != 'N': 
-            try:
-                entities = tweet['entities']
+        tweet = json.loads(line)   
+        # hunt for hashtags 
+        huntForHashTags(tweet, hashtagMap)     
+        
+    # process Word Maps
+    i = 0
+    for item in hashtagMap:
+        i = i+1
+        count = hashtagMap[item]
+        if i < 11:
+            print item+' '+str(count)
+
+def huntForHashTags(tweet, hashtagMap):
+    e = 0
+    if tweet.get('entities','N') != 'N': 
+        try:
+            entities = tweet['entities']
+            if entities.get('hashtags','N') != 'N':
+                hashtags = entities['hashtags']                    
+                buildTagMap(hashtags,hashtagMap)
+        except UnicodeEncodeError:
+            e = e+1
+                
+    if tweet.get('user','N') != 'N': 
+        try:
+            user = tweet['user']
+            if user.get('hashtags','N') != 'N':
+                hashtags = user['hashtags']                    
+                buildTagMap(hashtags,hashtagMap)
+            if user.get('entities','N') != 'N':
+                entities = user['entities']
                 if entities.get('hashtags','N') != 'N':
                     hashtags = entities['hashtags']                    
-                # tweetText = unicodedata.normalize('NFKD', tweetText).encode('ascii','ignore')
-                buildTagMap(hashtags,hashtagMap)
-            except UnicodeEncodeError:
-                e = e+1
-                
-        if tweet.get('user','N') != 'N': 
-            try:
-                user = tweet['user']
-                if user.get('hashtags','N') != 'N':
-                    hashtags = user['hashtags']                    
-                # tweetText = unicodedata.normalize('NFKD', tweetText).encode('ascii','ignore')
-                buildTagMap(hashtags,hashtagMap)
-            except UnicodeEncodeError:
-                e = e+1
-    # process Word Maps
-    for item in hashtagMap:
-        count = hashtagMap[item]
-        item = unicodedata.normalize('NFKD', item).encode('ascii','ignore')
-        print item+' '+str(count)
-    
+                    buildTagMap(hashtags,hashtagMap)
+            if user.get('status','N') != 'N':
+                status = user['status']
+                if status.get('entities','N') != 'N':
+                    entities = status['entities']
+                    if entities.get('hashtags','N') != 'N':
+                        hashtags = entities['hashtags']                    
+                        buildTagMap(hashtags,hashtagMap)
+        except UnicodeEncodeError:
+            e = e+1
+
         
 def buildTagMap(hashtags,hashtagMap):
     for item in hashtags:
-        #print item
         itemTag = item['text']
-        #print itemTag
+        itemTag = unicodedata.normalize('NFKD', itemTag ).encode('ascii','ignore')
         if hashtagMap.get(itemTag, 'NOT FOUND') != 'NOT FOUND':
             hashtagMap[itemTag] = hashtagMap[itemTag]+1
         else:

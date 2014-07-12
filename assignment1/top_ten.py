@@ -21,7 +21,16 @@ def main():
                 buildTagMap(hashtags,hashtagMap)
             except UnicodeEncodeError:
                 e = e+1
-
+                
+        if tweet.get('user','N') != 'N': 
+            try:
+                user = tweet['user']
+                if user.get('hashtags','N') != 'N':
+                    hashtags = user['hashtags']                    
+                # tweetText = unicodedata.normalize('NFKD', tweetText).encode('ascii','ignore')
+                buildTagMap(hashtags,hashtagMap)
+            except UnicodeEncodeError:
+                e = e+1
     # process Word Maps
     for item in hashtagMap:
         count = hashtagMap[item]

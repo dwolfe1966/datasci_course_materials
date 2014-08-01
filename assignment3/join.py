@@ -20,31 +20,23 @@ def mapper(record):
     out = []
     out.append(table)
     out.extend(value)
-    mr.emit_intermediate(key, out)
+    mr.emit_intermediate(key, record)
 
 def reducer(key, list_of_values):
     # key: order_id
     # value: list of table name + values
-    joinlist = {}
     order = []
-    for item in list_of_values:
-        if item[0] == 'order':
-            order.extend(item[2:])
-           # print order
+    for item1 in list_of_values:
+        if item1[0] == 'order':
+            order = item1
             break
         
-    i = 0;    
     for item in list_of_values:
-        # print item
         if item[0] == 'line_item':
             row = []
             row.extend(order);
-            row.extend(item[2:])
-            print row
-            joinlist[i] = row
-            i = i+1
-            
-    mr.emit((key, joinlist.items()))
+            row.extend(item)
+            mr.emit(row)
 
 # Do not modify below this line
 # =============================
